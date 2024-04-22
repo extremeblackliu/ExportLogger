@@ -10,6 +10,8 @@ Log `GetProcAddress` Get and Call
 # Usage
 this project used version.dll hijack, put compiled binary to same folder of target executable and launch the executable.
 
+then you should have file in the folder like `Log_[2024-4-23]-[7-7-12].txt`
+
 # TODO
 - x64 support
 - Fix crash with global record enabled
