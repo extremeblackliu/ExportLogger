@@ -69,7 +69,10 @@ fnGetProcAddress oGetProcAddress;
 FARPROC __stdcall hkGetProcAddress(HMODULE hModule, const char* sExport)
 {
     FARPROC pOriginalExport = oGetProcAddress(hModule, sExport);
-    LogGet(sExport);
+    static int iCounter = 1; // why we don't use unordered_map or record return address? because its pointless, there could be wrapper function for calling getprocaddress. better print the stack.
+    char cSequence[255] = { 0 };
+    sprintf(cSequence, "%s [Seq:%d]", sExport, iCounter);
+    LogGet(cSequence);
 #if GLOBAL_MODE == 0
     static HMODULE pTargetModule;
     if (!pTargetModule)
@@ -79,7 +82,7 @@ FARPROC __stdcall hkGetProcAddress(HMODULE hModule, const char* sExport)
     if(pTargetModule == hModule)
 #endif
     {
-        return (FARPROC)GenerateLoggerStub(pOriginalExport, sExport);
+        return (FARPROC)GenerateLoggerStub(pOriginalExport, cSequence);
     }
     return pOriginalExport;
 }
