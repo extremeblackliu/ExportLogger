@@ -7,6 +7,9 @@ Log `GetProcAddress` Get and Call
 - Call Stack, not enabled by default.
 - Global Record, not enabled by default. (BUG)
 
+# Usage
+this project used version.dll hijack, put compiled binary to same folder of target executable and launch the executable.
+
 # TODO
 - x64 support
 - Fix crash with global record enabled
