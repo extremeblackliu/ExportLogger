@@ -4,43 +4,39 @@
 #include <time.h>
 
 #include "minhook/include/MinHook.h"
+#include "StackFormat.hpp"
 #include "Hijack.h"
 
+// #define GLOBAL_MODE // record all modules
+// #define PRINT_CALLSTACK // WARNING: this cause target executable lag hard, only turn on when you need it
 
-#define GLOBAL_MODE 0
 #define TARGET_MODULE "HPSocket4C-SSL.dll"
 
+char cFileName[50] = { 0 };
 tm* LogTime;
 
 void __stdcall Log(const char* pFormatted)
 {
-    char cFileName[50] = { 0 };
-    sprintf(cFileName, "Log_%d_%d_%d_%d_%d_%d.txt", LogTime->tm_year, LogTime->tm_mon, LogTime->tm_hour, LogTime->tm_hour, LogTime->tm_min, LogTime->tm_sec);
     FILE* hFile = fopen(cFileName, "a");
-    
     fwrite(pFormatted, strlen(pFormatted), 1, hFile);
     fclose(hFile);
 }
 
 void __stdcall LogCall(const char* sExport)
 {
-    time_t t = time(0) + 8 * 3600;
-    tm* ft = localtime(&t);
-
     char sLog[255] = { 0 };
-    sprintf(sLog, "[*] %d:%d:%d calling export: %s\n", ft->tm_hour, ft->tm_min, ft->tm_sec, sExport);
-
-    return Log(sLog);
+    sprintf(sLog, "[*][CALL] %d:%d:%d export: %s\n" CALLSTACK_MSG_BEGIN, LogTime->tm_hour, LogTime->tm_min, LogTime->tm_sec, sExport);
+    Log(sLog);
+#ifdef PRINT_CALLSTACK
+    StackFormat sw; sw.ShowCallstack();
+    Log(CALLSTACK_MSG_END);
+#endif
 }
 
 void __stdcall LogGet(const char* pMsg)
 {
-    time_t t = time(0);
-    tm* ft = localtime(&t);
-
     char sLog[255] = { 0 };
-    sprintf(sLog, "[*] %d:%d:%d getting export: %s\n", ft->tm_hour, ft->tm_min, ft->tm_sec, pMsg);
-
+    sprintf(sLog, "[*][GET] %d:%d:%d export: %s\n", LogTime->tm_hour, LogTime->tm_min, LogTime->tm_sec, pMsg);
     return Log(sLog);
 }
 
@@ -70,10 +66,7 @@ FARPROC __stdcall hkGetProcAddress(HMODULE hModule, const char* sExport)
 {
     FARPROC pOriginalExport = oGetProcAddress(hModule, sExport);
     static int iCounter = 1; // why we don't use unordered_map or record return address? because its pointless, there could be wrapper function for calling getprocaddress. better print the stack.
-    char cSequence[255] = { 0 };
-    sprintf(cSequence, "%s [Seq:%d]", sExport, iCounter);
-    LogGet(cSequence);
-#if GLOBAL_MODE == 0
+#ifndef GLOBAL_MODE
     static HMODULE pTargetModule;
     if (!pTargetModule)
     {
@@ -82,6 +75,13 @@ FARPROC __stdcall hkGetProcAddress(HMODULE hModule, const char* sExport)
     if(pTargetModule == hModule)
 #endif
     {
+        char cSequence[255] = { 0 };
+        if ((uintptr_t)sExport < 0x1000) // get by order?
+            sprintf(cSequence, "Order %d [Seq:%d]", (uintptr_t)sExport, iCounter);
+        else 
+            sprintf(cSequence, "%s [Seq:%d]", sExport, iCounter);
+        iCounter++;
+        LogGet(cSequence);
         return (FARPROC)GenerateLoggerStub(pOriginalExport, cSequence);
     }
     return pOriginalExport;
@@ -94,9 +94,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         sneakyevil_DllHijack::Initialize();
         time_t t = time(NULL);
         LogTime = localtime(&t);
-        
+        sprintf(cFileName, "Log_[%d-%d-%d]-[%d-%d-%d].txt", 1900 + LogTime->tm_year, LogTime->tm_mon + 1, LogTime->tm_mday, LogTime->tm_hour, LogTime->tm_min, LogTime->tm_sec);
+        Log("==============================================\n");
         Log("ExporLogger made by Extr3lackLiu\n");
-        
+        Log("https://github.com/extremeblackliu/ExportLogger\n");
+        Log("==============================================\n");
         MH_Initialize();
         MH_CreateHookApi(L"kernel32.dll", "GetProcAddress", hkGetProcAddress, (void**)&oGetProcAddress);
         MH_EnableHook(MH_ALL_HOOKS);

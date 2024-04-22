@@ -1,65 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
+    <Filter Include="header">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="minhook">
+    <Filter Include="cpp">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{66201e69-2151-487a-944b-1bfeb70a181a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\StackWalker">
+      <UniqueIdentifier>{72134039-28df-4f39-b6a2-7c24239af1a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\minhook">
       <UniqueIdentifier>{f3526d65-df8f-4e49-912f-6b5de306c9c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
-      <Filter>源文件</Filter>
+      <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="minhook\src\buffer.c">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClCompile>
     <ClCompile Include="minhook\src\hde\hde32.c">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClCompile>
     <ClCompile Include="minhook\src\hde\hde64.c">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClCompile>
     <ClCompile Include="minhook\src\hook.c">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClCompile>
     <ClCompile Include="minhook\src\trampoline.c">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker\StackWalker.cpp">
+      <Filter>3rdParty\StackWalker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hijack.h">
-      <Filter>头文件</Filter>
+      <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="minhook\include\MinHook.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\buffer.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\hde\hde32.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\hde\hde64.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\hde\pstdint.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\hde\table32.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\hde\table64.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
     </ClInclude>
     <ClInclude Include="minhook\src\trampoline.h">
-      <Filter>minhook</Filter>
+      <Filter>3rdParty\minhook</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker\StackWalker.h">
+      <Filter>3rdParty\StackWalker</Filter>
+    </ClInclude>
+    <ClInclude Include="StackFormat.hpp">
+      <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
